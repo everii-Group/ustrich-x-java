@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="full" basedir=".">
+	
+	<!-- set global properties for this build -->
+	<property name="build.sysclasspath" value="last" />
+	<property name="src" location="src" />
+	<property name="lib" location="lib" />
+	<property name="build" location="bin" />
+	<property name="dist" location="jar" />
+	<property name="finaljar" location="../../writeable/applications/com_untermstrich_modify_office_files/portlets/" />
+	<property name="version.number" value="1.02"/>
+	<property name="ant.build.javac.source" value="1.7"/>
+	<property name="ant.build.javac.target" value="1.7"/>
+	<property name="poi.version" value="3.15"/>
+	
+	<path id="classpath">
+		<fileset dir="${lib}">
+			<include name="*.jar"/>
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	<!-- Full build -->
+	<target name="full" depends="create_run_jar">
+		<echo>Copy to butler</echo>
+		<copy file="${dist}/modify_office_files.jar" todir="${finaljar}"/>
+		<copy file="${dist}/log4j2.xml" todir="${finaljar}"/>
+		<copy file="${dist}/test.xlsx" todir="${finaljar}"/>
+		
+		<echo>Full build done</echo>
+	</target>
+	
+	<!-- Create the class files -->
+	<target name="compile" description="compile the source " >
+		<tstamp>
+			<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<buildnumber/>
+		
+		<echo message="Build: ${basedir}" />
+		
+		<!-- Build java -->
+		<delete>
+			<fileset dir="${build}">
+				<include name="*.*" />
+				<include name="**/*.*" />
+			</fileset>
+		</delete>
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}" destdir="${build}" classpathref="classpath" target="1.7" />
+		
+		<!-- Copy resources -->
+		<mkdir dir="${build}/resources" />
+		<copy todir="${build}/resources" >
+			<fileset dir="${src}/resources">
+				<exclude name=".svn" />
+			</fileset>
+		</copy>
+		<copy todir="${build}" >
+			<fileset dir="${src}">
+				<exclude name=".svn" />
+			</fileset>
+		</copy>
+		
+		<!-- Create version file -->
+		<echo file="${build}/version.txt">${version.number}.${build.number}</echo>
+	</target>
+	
+	<!-- Create the application jar -->
+	<target name="create_run_jar" depends="compile" description="Create runnable jar for modify_office_files">
+		<echo>Create jar file</echo>
+		<delete file="${dist}/modify_office_files.jar" />
+        <jar destfile="${dist}/modify_office_files.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="com.untermstrich.modofficefiles.ModOfficeFiles"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ log4j-core-2.7.jar log4j-api-2.7.jar commons-codec-1.10.jar commons-io-2.2.jar commons-collections4-4.1.jar commons-csv-1.2.jar minimal-json-0.9.5.jar xmlbeans-2.6.0.jar poi-${poi.version}.jar poi-ooxml-${poi.version}.jar poi-ooxml-schemas-${poi.version}.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="${build}">
+				<exclude name="*.java" />
+				<exclude name="**/*.java" />
+			</fileset>
+            <zipfileset dir="${lib}/nonpoi" includes="commons-*.jar"/>
+        	<zipfileset dir="${lib}/nonpoi" includes="minimal-*.jar"/>
+            <zipfileset dir="${lib}/lib" includes="commons-codec*.jar"/>
+            <zipfileset dir="${lib}/lib" includes="commons-collections*.jar"/>
+            <zipfileset dir="${lib}/ooxml-lib" includes="xmlbeans-*.jar"/>
+            <zipfileset dir="${lib}" includes="poi-${poi.version}.jar"/>
+            <zipfileset dir="${lib}" includes="poi-ooxml-${poi.version}.jar"/>
+            <zipfileset dir="${lib}" includes="poi-ooxml-schemas-${poi.version}.jar"/>
+            <zipfileset dir="${lib}/lib" includes="log4j-core-2.*.jar"/>
+            <zipfileset dir="${lib}/lib" includes="log4j-api-2.*.jar"/>
+        </jar>
+        <copy file="${src}/log4j2.xml" todir="${dist}"/>
+        <copy file="${src}/test.xlsx" todir="${dist}"/>
+    </target>
+	
+	<!-- Create javadoc -->
+    <target name="javadoc" depends="create_run_jar">
+        <javadoc access="public" author="true" classpath="" destdir="javadoc" doctitle="modify_office_files" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.untermstrich.communication,com.untermstrich.enums,com.untermstrich.files,com.untermstrich.gui" source="1.6" sourcepath="src" splitindex="true" use="true" version="true" />
+    </target>
+	
+</project>

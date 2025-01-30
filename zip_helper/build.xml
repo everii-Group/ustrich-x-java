@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" basedir="." name="Create Runnable Jar for Project zip_helper with Jar-in-Jar Loader">
+	<property name="src" location="src" />
+	<property name="build" location="bin" />
+	<property name="dist" location="jar" />
+	<property name="finaljar" location="../../../versionx2/java/" />
+	
+    <target name="create_run_jar">
+		<echo message="Build: ${basedir}" />
+	
+        <jar destfile="${dist}/zip_helper.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="com.untermstrich.ziphelper.Ziphelper"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ zip4j_1.3.1.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="${build}"/>
+            <zipfileset dir="${basedir}" includes="zip4j_1.3.1.jar"/>
+        </jar>
+    	
+    	<copy file="${dist}/zip_helper.jar" todir="${finaljar}"/>
+    	
+    	<echo>Full build done</echo>
+    </target>
+</project>

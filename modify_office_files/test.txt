@@ -1,0 +1,15 @@
+Sheet1
+Stundenliste in XLSX einfügen	null	null	null
+null	null	null	null
+Betrag	Datum	Zweck	Projekt	null
+369,00 [$E+UR]	03/01/2013	Hab 3 mal was gemacht	Projekt P300	0,00 [$E+UR]
+492,00 [$E+UR]	04/01/2013	Hab 4 mal was gemacht	Projekt P400	0,00 [$E+UR]
+615,00 [$E+UR]	05/01/2013	Hab 5 mal was gemacht	Projekt P500	0,00 [$E+UR]
+738,00 [$E+UR]	06/01/2013	Hab 6 mal was gemacht	Projekt P600	0,00 [$E+UR]
+861,00 [$E+UR]	07/01/2013	Hab 7 mal was gemacht	Projekt P700	0,00 [$E+UR]
+984,00 [$E+UR]	08/01/2013	Hab 8 mal was gemacht	Projekt P800	0,00 [$E+UR]
+1.107,00 [$E+UR]	09/01/2013	Hab 9 mal was gemacht	Projekt P900	0,00 [$E+UR]
+0,00 [$E+UR]	null	null	null	
+
+
+
