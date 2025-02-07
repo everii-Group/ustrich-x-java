@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create_run_jar" basedir="." name="Create Runnable Jar for Project zip_helper with Jar-in-Jar Loader">
 	<property name="src" location="src" />
+    <property name="lib" location="lib" />
 	<property name="build" location="bin" />
 	<property name="dist" location="jar" />
 	<property name="finaljar" location="../../../versionx2/java/" />
+
+    <path id="classpath">
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <mkdir dir="${build}"/>
+        <delete>
+            <fileset dir="${build}">
+                <include name="*.*" />
+                <include name="**/*.*" />
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="compile" depends="init" description="compile the source">
+        <javac srcdir="${src}" destdir="${build}" classpathref="classpath"/>
+    </target>
 	
-    <target name="create_run_jar">
+    <target name="create_run_jar" depends="compile">
 		<echo message="Build: ${basedir}" />
 	
         <jar destfile="${dist}/zip_helper.jar">
