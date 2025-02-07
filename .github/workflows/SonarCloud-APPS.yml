@@ -1,0 +1,27 @@
+name: SonarCloud-Java
+on:
+  # 10:00 PM UTC every Tuesday and 10:00 PM UTC every Thursday
+  schedule:
+    - cron: '0 22 * * 2,4'  # Adjust the time if needed
+
+  # Manual trigger: https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/manually-running-a-workflow
+  workflow_dispatch:
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: master
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          args:
+            -Dsonar.scanner.javaOpts=-Xmx4048m
+        env:
+          #Activate this when working with PRs
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
