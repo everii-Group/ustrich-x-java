@@ -1,0 +1,24 @@
+name: FOSSA-Java
+on:
+  # 10:00 PM UTC every Tuesday
+  schedule:
+    - cron: '0 22 * * 2'  # Adjust the time if needed
+
+  # Manual trigger: https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/manually-running-a-workflow
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Set up FOSSA
+        run: |
+          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
+
+      - name: Analyze licenses with FOSSA
+        run: fossa analyze --without-default-filters
+        env:
+          FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
